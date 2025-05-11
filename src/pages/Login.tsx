@@ -6,6 +6,7 @@ import UserAuthForm from '@/components/UserAuthForm';
 import Navbar from '@/components/Navbar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from '@/hooks/use-toast';
+import { API_BASE_URL, API_PATHS } from '@/config/apiConfig';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,11 +23,14 @@ const Login = () => {
   useEffect(() => {
     const checkServerStatus = async () => {
       try {
-        // 这里将来会替换为实际的Flask API健康检查端点
-        // 例如: const response = await fetch('http://localhost:5000/api/health');
-        // 目前使用模拟数据
-        setServerStatus("online");
-        console.log("API服务器在线");
+        const response = await fetch(`${API_BASE_URL}${API_PATHS.SYSTEM.HEALTH}`);
+        
+        if (response.ok) {
+          setServerStatus("online");
+          console.log("API服务器在线");
+        } else {
+          throw new Error("API服务器返回错误状态");
+        }
       } catch (error) {
         console.error("API服务器离线:", error);
         setServerStatus("offline");
