@@ -1,10 +1,9 @@
-
 from flask import request, jsonify, current_app
 from app import db
 from app.models import User, CustomerProfile, ManagerProfile, MatchHistory
 from app.api import api_bp
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.utils.clustering import classify_customers, auto_assign_customers, compute_similarity_score
+from app.utils.clustering import classify_customers, auto_assign_customers, compute_similarity_score, generate_customer_insights
 
 # 客户相关API
 @api_bp.route('/customers/<int:user_id>/profile', methods=['GET'])
@@ -377,3 +376,26 @@ def get_admin_stats():
         'class_stats': class_stats,
         'manager_loads': manager_loads
     }), 200
+
+# 新增客户洞察API
+@api_bp.route('/customers/<int:user_id>/insights', methods=['GET'])
+@jwt_required()
+def get_customer_insights(user_id):
+    # 获取当前用户
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    # 检查权限（只有自己、该客户的经理或管理员可以查看客户洞察）
+    customer_profile = CustomerProfile.query.filter_by(user_id=user_id).first()
+    if not customer_profile:
+        return jsonify({'msg': '未找到客户资料'}), 404
+        
+    if (current_user_id != user_id and 
+        current_user.role != 'admin' and 
+        (current_user.role != 'manager' or customer_profile.manager_id != current_user_id)):
+        return jsonify({'msg': '权限不足'}), 403
+    
+    # 生成客户洞察
+    insights = generate_customer_insights(user_id)
+    
+    return jsonify(insights), 200
