@@ -288,14 +288,14 @@ const AdminDashboard: React.FC = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <Select
-                            value={customer.assignedManagerId || ''}
-                            onValueChange={(value) => handleManagerAssignment(customer.id, value || null)}
+                            value={customer.assignedManagerId || "unassigned"}
+                            onValueChange={(value) => handleManagerAssignment(customer.id, value === "unassigned" ? null : value)}
                           >
                             <SelectTrigger className="w-36">
                               <SelectValue placeholder="选择客户经理" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="">未分配</SelectItem>
+                              <SelectItem value="unassigned">未分配</SelectItem>
                               {mockManagers.map((manager) => (
                                 <SelectItem key={manager.id} value={manager.id}>
                                   {manager.name} ({manager.customerCount})
