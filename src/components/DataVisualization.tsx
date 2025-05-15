@@ -302,7 +302,11 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({
                   />
                   <Tooltip 
                     contentStyle={{ borderRadius: "8px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}
-                    formatter={(value) => [`${value.toFixed(1)}人`, '平均每位经理']}
+                    formatter={(value) => {
+                      // Fix for the TypeScript error - check if value is a number before calling toFixed
+                      const formattedValue = typeof value === 'number' ? value.toFixed(1) : value;
+                      return [`${formattedValue}人`, '平均每位经理'];
+                    }}
                   />
                   <Legend />
                 </RadarChart>
