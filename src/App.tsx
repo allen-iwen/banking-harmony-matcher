@@ -10,6 +10,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import SystemEnhancements from "./pages/SystemEnhancements";
+import SystemEnhancementRoadmap from "./components/SystemEnhancementRoadmap";
+import CustomerInsights from "./components/CustomerInsights";
+import MatchingVisualization from "./components/MatchingVisualization";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +29,10 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/enhancements" element={<SystemEnhancements />} />
+            <Route path="/system-roadmap" element={<SystemEnhancementRoadmap />} />
+            <Route path="/customer-insights" element={<CustomerInsights />} />
+            <Route path="/matching-visualization" element={<MatchingVisualization />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
