@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { BarChart, LineChart, PieChart, RadarChart } from "@/components/ui/chart";
+import { BarChart, LineChart, PieChart, RadarChart } from "@/components/ui/charts";
 import { User, CustomerNeed, Hobby } from "@/types/types";
 
 // Mock data for customer insights
