@@ -1,4 +1,3 @@
-
 from app import db
 from datetime import datetime
 import json
@@ -160,4 +159,36 @@ class MatchHistory(db.Model):
             'created_at': self.created_at.isoformat(),
             'customer': self.customer.to_dict() if self.customer else None,
             'manager': self.manager.to_dict() if self.manager else None
+        }
+
+# 人工智能表
+class AIInteraction(db.Model):
+    id = db.Column(db.BigInteger, primary_key=True)
+    add_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.BigInteger, nullable=False)
+    ad_mind = db.Column(db.BigInteger, nullable=False)  # admin_id
+    ask = db.Column(db.Text, nullable=False)  # 提问
+    reply = db.Column(db.Text, nullable=False)  # 回复
+    is_reply = db.Column(db.Integer, nullable=False, default=0)  # 是否回复
+    is_read = db.Column(db.Integer, nullable=True)  # 已读/未读
+    user_name = db.Column(db.String(12), nullable=False)  # 用户名
+    user_image = db.Column(db.Text, nullable=False)  # 用户头像
+    type = db.Column(db.Integer, nullable=False)  # 内容类型
+    
+    def __repr__(self):
+        return f'<AIInteraction {self.id}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'add_time': self.add_time.isoformat(),
+            'user_id': self.user_id,
+            'ad_mind': self.ad_mind,
+            'ask': self.ask,
+            'reply': self.reply,
+            'is_reply': self.is_reply,
+            'is_read': self.is_read,
+            'user_name': self.user_name,
+            'user_image': self.user_image,
+            'type': self.type
         }

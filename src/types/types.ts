@@ -107,3 +107,18 @@ export interface SimilarityMatrix {
     score: number;
   }[];
 }
+
+// AI Interaction Type - 人工智能表
+export interface AIInteraction {
+  id: string;
+  addTime: string;           // 创建时间
+  userId: string;            // 用户id
+  adMind: string;            // 管理员id
+  ask: string;               // 提问
+  reply: string;             // 回复
+  isReply: number;           // 是否回复
+  isRead: number | null;     // 已读/未读
+  userName: string;          // 用户名
+  userImage: string;         // 用户头像
+  type: number;              // 内容类型
+}
