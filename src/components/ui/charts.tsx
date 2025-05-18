@@ -33,26 +33,49 @@ const defaultChartConfig: ChartConfig = {
   muted: { color: "hsl(210 40% 96.1%)" },
 };
 
+// Define chart data types
+interface ChartDataset {
+  label: string;
+  data: number[];
+  backgroundColor?: string | string[];
+  borderColor?: string;
+  borderWidth?: number;
+}
+
+interface ChartData {
+  labels: string[];
+  datasets: ChartDataset[];
+}
+
 // BarChart Component
 interface BarChartProps {
-  data: any[];
+  data: ChartData;
   options?: any;
 }
 
 export const BarChart = ({ data, options }: BarChartProps) => {
+  // Transform the data format for Recharts
+  const transformedData = data.labels.map((label, index) => {
+    const dataPoint: any = { name: label };
+    data.datasets.forEach((dataset) => {
+      dataPoint[dataset.label] = dataset.data[index];
+    });
+    return dataPoint;
+  });
+
   return (
     <ChartContainer config={defaultChartConfig} className="w-full h-full">
-      <RechartsBarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+      <RechartsBarChart data={transformedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Legend />
-        {data?.datasets?.map((dataset: any, index: number) => (
+        {data.datasets.map((dataset, index) => (
           <Bar
             key={index}
-            dataKey={dataset.label || "value"}
-            fill={dataset.backgroundColor || "#8884d8"}
+            dataKey={dataset.label}
+            fill={dataset.backgroundColor as string || "#8884d8"}
             stroke={dataset.borderColor}
             name={dataset.label}
           />
@@ -64,26 +87,35 @@ export const BarChart = ({ data, options }: BarChartProps) => {
 
 // LineChart Component
 interface LineChartProps {
-  data: any[];
+  data: ChartData;
   options?: any;
 }
 
 export const LineChart = ({ data, options }: LineChartProps) => {
+  // Transform the data format for Recharts
+  const transformedData = data.labels.map((label, index) => {
+    const dataPoint: any = { name: label };
+    data.datasets.forEach((dataset) => {
+      dataPoint[dataset.label] = dataset.data[index];
+    });
+    return dataPoint;
+  });
+
   return (
     <ChartContainer config={defaultChartConfig} className="w-full h-full">
-      <RechartsLineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+      <RechartsLineChart data={transformedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Legend />
-        {data?.datasets?.map((dataset: any, index: number) => (
+        {data.datasets.map((dataset, index) => (
           <Line
             key={index}
             type="monotone"
-            dataKey={dataset.label || "value"}
+            dataKey={dataset.label}
             stroke={dataset.borderColor || "#8884d8"}
-            fill={dataset.backgroundColor}
+            fill={dataset.backgroundColor as string}
             name={dataset.label}
           />
         ))}
@@ -94,36 +126,47 @@ export const LineChart = ({ data, options }: LineChartProps) => {
 
 // PieChart Component
 interface PieChartProps {
-  data: any;
+  data: ChartData;
   options?: any;
 }
 
 export const PieChart = ({ data, options }: PieChartProps) => {
+  // Transform the data for a pie chart
+  const transformedData = data.labels.map((label, index) => {
+    return {
+      name: label,
+      value: data.datasets[0].data[index]
+    };
+  });
+
   return (
     <ChartContainer config={defaultChartConfig} className="w-full h-full">
       <RechartsPieChart margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
         <ChartTooltip content={<ChartTooltipContent />} />
         <Legend />
-        {data?.datasets?.map((dataset: any, index: number) => (
-          <Pie
-            key={index}
-            data={dataset.data.map((value: number, i: number) => ({
-              name: data.labels[i],
-              value: value,
-            }))}
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
-            label
-          >
-            {dataset.data.map((_: any, i: number) => (
-              <Cell key={`cell-${i}`} fill={dataset.backgroundColor?.[i] || `#${Math.floor(Math.random() * 16777215).toString(16)}`} />
-            ))}
-          </Pie>
-        ))}
+        <Pie
+          data={transformedData}
+          cx="50%"
+          cy="50%"
+          outerRadius={80}
+          fill="#8884d8"
+          dataKey="value"
+          nameKey="name"
+          label
+        >
+          {transformedData.map((_, index) => {
+            const colors = Array.isArray(data.datasets[0].backgroundColor) 
+              ? data.datasets[0].backgroundColor 
+              : [data.datasets[0].backgroundColor || "#8884d8"];
+            
+            return (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={colors[index % colors.length] || `#${Math.floor(Math.random() * 16777215).toString(16)}`} 
+              />
+            );
+          })}
+        </Pie>
       </RechartsPieChart>
     </ChartContainer>
   );
@@ -131,11 +174,20 @@ export const PieChart = ({ data, options }: PieChartProps) => {
 
 // RadarChart Component
 interface RadarChartProps {
-  data: any;
+  data: ChartData;
   options?: any;
 }
 
 export const RadarChart = ({ data, options }: RadarChartProps) => {
+  // Transform the data for a radar chart
+  const transformedData = data.labels.map((label, index) => {
+    const dataPoint: any = { name: label };
+    data.datasets.forEach((dataset) => {
+      dataPoint[dataset.label] = dataset.data[index];
+    });
+    return dataPoint;
+  });
+
   return (
     <ChartContainer config={defaultChartConfig} className="w-full h-full">
       <RechartsRadarChart cx="50%" cy="50%" outerRadius="80%">
@@ -144,25 +196,16 @@ export const RadarChart = ({ data, options }: RadarChartProps) => {
         <PolarRadiusAxis />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Legend />
-        {data?.datasets?.map((dataset: any, index: number) => {
-          // Transform the data into the format expected by RadarChart
-          const transformedData = data.labels.map((label: string, i: number) => ({
-            name: label,
-            value: dataset.data[i],
-          }));
-          
-          return (
-            <Radar
-              key={index}
-              name={dataset.label}
-              dataKey="value"
-              stroke={dataset.borderColor || "#8884d8"}
-              fill={dataset.backgroundColor || "#8884d8"}
-              fillOpacity={0.6}
-              data={transformedData}
-            />
-          );
-        })}
+        {data.datasets.map((dataset, index) => (
+          <Radar
+            key={index}
+            name={dataset.label}
+            dataKey={dataset.label}
+            stroke={dataset.borderColor || "#8884d8"}
+            fill={dataset.backgroundColor as string || "#8884d8"}
+            fillOpacity={0.6}
+          />
+        ))}
       </RechartsRadarChart>
     </ChartContainer>
   );

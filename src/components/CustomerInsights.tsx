@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { BarChart, LineChart, PieChart, RadarChart } from "@/components/ui/charts";
+import { BarChart, LineChart, PieChart } from "@/components/ui/charts";
 import { User, CustomerNeed, Hobby } from "@/types/types";
 
 // Mock data for customer insights
@@ -82,6 +82,7 @@ const CustomerInsights: React.FC<CustomerInsightsProps> = ({ customerId }) => {
     labels: ["积极", "中性", "消极"],
     datasets: [
       {
+        label: "情绪分析",
         data: [
           customerData.sentimentAnalysis.positive,
           customerData.sentimentAnalysis.neutral,
@@ -109,6 +110,7 @@ const CustomerInsights: React.FC<CustomerInsightsProps> = ({ customerId }) => {
     labels: ["储蓄", "投资", "消费"],
     datasets: [
       {
+        label: "资金分配",
         data: [
           customerData.financialBehavior.savingsRate,
           customerData.financialBehavior.investmentRate,
