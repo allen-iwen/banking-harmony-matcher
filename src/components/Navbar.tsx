@@ -20,7 +20,20 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
-  const { toggleSidebar } = useSidebar();
+  
+  // Check if we're on a public page where sidebar is not needed
+  const isPublicPage = location.pathname === '/login' || 
+                       location.pathname === '/register' || 
+                       location.pathname === '/';
+  
+  // Only access useSidebar when not on public pages to prevent errors
+  const sidebarContext = !isPublicPage ? useSidebar() : null;
+  
+  const toggleSidebar = () => {
+    if (sidebarContext) {
+      sidebarContext.toggleSidebar();
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -41,7 +54,7 @@ const Navbar = () => {
   };
 
   // For public pages, show a simpler navbar
-  if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/') {
+  if (isPublicPage) {
     return (
       <header className="bg-white shadow-sm border-b">
         <div className="container mx-auto flex justify-between items-center py-3 px-4">

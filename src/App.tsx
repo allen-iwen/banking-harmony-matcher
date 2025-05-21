@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -22,26 +23,28 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/enhancements" element={<SystemEnhancements />} />
-              <Route path="/system-roadmap" element={<SystemEnhancementRoadmap />} />
-              <Route path="/customer-insights" element={<CustomerInsights />} />
-              <Route path="/matching-visualization" element={<MatchingVisualization />} />
-              <Route path="/ai-support" element={<AISupport />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </TooltipProvider>
+      <SidebarProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/enhancements" element={<SystemEnhancements />} />
+                <Route path="/system-roadmap" element={<SystemEnhancementRoadmap />} />
+                <Route path="/customer-insights" element={<CustomerInsights />} />
+                <Route path="/matching-visualization" element={<MatchingVisualization />} />
+                <Route path="/ai-support" element={<AISupport />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </SidebarProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
